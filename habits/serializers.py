@@ -1,42 +1,17 @@
 from rest_framework.serializers import ModelSerializer
 
 from habits.models import Habit
-from habits.validators import CreateHabitValidator, UpdateHabitValidator
-from users.models import User
 
 
 class HabitSerializer(ModelSerializer):
     class Meta:
         model = Habit
-        fields = "__all__"
-        read_only_fields = ("user",)
+        fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def validate(self, data):
+        pass
 
-        if self.instance:
-            self.validators = [UpdateHabitValidator(instance=self.instance)]
-        else:
-            self.validators = [CreateHabitValidator()]
+    def validate_time_to_complete(self):
+        pass
 
-
-class UserSimpleSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["first_name"]
-
-
-class PublicHabitSerializer(ModelSerializer):
-    user = UserSimpleSerializer(read_only=True)
-
-    class Meta:
-        model = Habit
-        fields = [
-            "id",
-            "time",
-            "action",
-            "is_pleasant",
-            "periodicity",
-            "time_to_complete",
-            "user",
-        ]
+    ...
