@@ -11,4 +11,3 @@ class HabitViewSet(ModelViewSet):
     serializer_class = HabitSerializer
     permission_classes = []
     pagination_class = []
-
