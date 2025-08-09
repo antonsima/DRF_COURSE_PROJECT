@@ -2,14 +2,23 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
+from habits.views import (
+    HabitViewSet,
+    PublicHabitListAPIView,
+    PublicHabitRetrieveAPIView,
+)
+
 app_name = "habits"
 
 router = DefaultRouter()
-router.register("habits", HabitViewSet)
+router.register("", HabitViewSet)
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("habits/", include("habits.urls", namespace="habits")),
-    path("users/", include("users.urls", namespace="users")),
-]
+    path(
+        "public/<int:pk>/",
+        PublicHabitRetrieveAPIView.as_view(),
+        name="habit-get",
+    ),
+    path("public/", PublicHabitListAPIView.as_view(), name="habits-list"),
+] + router.urls
