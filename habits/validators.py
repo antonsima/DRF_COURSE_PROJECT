@@ -83,6 +83,6 @@ class UpdateHabitValidator:
                     "У полезной привычки должно быть либо вознаграждение, либо связанная привычка"
                 )
             if linked_habit:
-                existing_linked_habit = Habit.objects.get(id=attrs["linked_habit"].id)
+                existing_linked_habit = Habit.objects.get(id=linked_habit.id)
                 if not existing_linked_habit.is_pleasant:
                     raise ValidationError("Связанная привычка должна быть приятной")

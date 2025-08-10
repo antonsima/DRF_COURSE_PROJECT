@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer
 
 from habits.models import Habit
 from habits.validators import CreateHabitValidator, UpdateHabitValidator
+from users.models import User
 
 
 class HabitSerializer(ModelSerializer):
@@ -19,14 +20,23 @@ class HabitSerializer(ModelSerializer):
             self.validators = [CreateHabitValidator()]
 
 
+class UserSimpleSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["first_name"]
+
+
 class PublicHabitSerializer(ModelSerializer):
+    user = UserSimpleSerializer(read_only=True)
+
     class Meta:
         model = Habit
         fields = [
+            "id",
             "time",
             "action",
             "is_pleasant",
             "periodicity",
             "time_to_complete",
-            "user__first_name_",
+            "user",
         ]
