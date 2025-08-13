@@ -8,6 +8,9 @@ services:
     environment:
       - DATABASE_HOST=db
       - REDIS_HOST=redis
+      - SECRET_KEY=${SECRET_KEY}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_BACKEND=${CELERY_RESULT_BACKEND}
     env_file:
       - .env
     ports:
@@ -51,6 +54,8 @@ services:
     environment:
       - DATABASE_HOST=db
       - REDIS_HOST=redis
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_BACKEND=${CELERY_RESULT_BACKEND}
     env_file:
       - .env
     volumes:
