@@ -188,7 +188,7 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BEAT_SCHEDULE = {
     "send_habit_reminder": {
         "task": "habits.tasks.send_habit_reminder",
-        "schedule": crontab(hour=19, minute=15),
+        "schedule": crontab(hour=4, minute=17),
     },
 }
 
