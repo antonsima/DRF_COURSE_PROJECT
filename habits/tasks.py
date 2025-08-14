@@ -50,41 +50,42 @@ def send_daily_habit_reminders():
     except Exception as e:
         logger.error(f"Ошибка в задаче send_daily_habit_reminders: {str(e)}")
 
-# @shared_task
-# def send_habit_reminders():
-#     """
-#     Отправляет напоминания о привычках в указанное время
-#     с учетом периодичности выполнения
-#     """
-#     try:
-#         now = timezone.now()
-#         current_time = now.time()
-#         current_weekday = now.isoweekday()  # 1-7 (пн-вс)
-#
-#         # Находим привычки, которые нужно выполнить сейчас
-#         habits = Habit.objects.filter(
-#             time__hour=current_time.hour,
-#             time__minute=current_time.minute
-#         )
-#
-#         for habit in habits:
-#             # Проверяем периодичность (если 1 - ежедневно, 7 - раз в неделю)
-#             if habit.periodicity == 1 or habit.periodicity >= current_weekday:
-#                 if not habit.user.chat_id:
-#                     logger.warning(f"У пользователя {habit.user} не указан chat_id")
-#                     continue
-#
-#                 message = (
-#                     f"⏰ *Напоминание:* {habit.action}\n"
-#                     f"🕒 *Время:* {habit.time.strftime('%H:%M')}\n"
-#                     f"🏠 *Место:* {habit.place}"
-#                 )
-#
-#                 try:
-#                     send_telegram_message(habit.user.chat_id, message)
-#                     logger.info(f"Отправлено напоминание для {habit.user}: {habit.action}")
-#                 except Exception as e:
-#                     logger.error(f"Ошибка отправки сообщения: {str(e)}")
-#
-#     except Exception as e:
-#         logger.error(f"Ошибка в задаче send_habit_reminders: {str(e)}")
+
+@shared_task
+def send_habit_reminders():
+    """
+    Отправляет напоминания о привычках в указанное время
+    с учетом периодичности выполнения
+    """
+    try:
+        now = timezone.now()
+        current_time = now.time()
+        current_weekday = now.isoweekday()  # 1-7 (пн-вс)
+
+        # Находим привычки, которые нужно выполнить сейчас
+        habits = Habit.objects.filter(
+            time__hour=current_time.hour,
+            time__minute=current_time.minute
+        )
+
+        for habit in habits:
+            # Проверяем периодичность (если 1 - ежедневно, 7 - раз в неделю)
+            if habit.periodicity == 1 or habit.periodicity >= current_weekday:
+                if not habit.user.chat_id:
+                    logger.warning(f"У пользователя {habit.user} не указан chat_id")
+                    continue
+
+                message = (
+                    f"⏰ *Напоминание:* {habit.action}\n"
+                    f"🕒 *Время:* {habit.time.strftime('%H:%M')}\n"
+                    f"🏠 *Место:* {habit.place}"
+                )
+
+                try:
+                    send_telegram_message(habit.user.chat_id, message)
+                    logger.info(f"Отправлено напоминание для {habit.user}: {habit.action}")
+                except Exception as e:
+                    logger.error(f"Ошибка отправки сообщения: {str(e)}")
+
+    except Exception as e:
+        logger.error(f"Ошибка в задаче send_habit_reminders: {str(e)}")

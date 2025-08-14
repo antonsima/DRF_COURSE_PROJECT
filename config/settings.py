@@ -188,16 +188,13 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BEAT_SCHEDULE = {
     'send-daily-habits-reminder': {
         'task': 'habits.tasks.send_daily_habit_reminders',
-        'schedule': crontab(hour=16, minute=34),  # Каждый день в 8:00 утра
+        'schedule': crontab(hour=8, minute=0),  # Каждый день в 8:00 утра
+    },
+    "send_habit_reminders": {
+        "task": "habits.tasks.send_habit_reminders",
+        "schedule": crontab(minute='*'),  # Каждую минуту
     },
 }
-
-# CELERY_BEAT_SCHEDULE = {
-#     "send_habit_reminders": {
-#         "task": "habits.tasks.send_habit_reminders",
-#         "schedule": crontab(minute='*'),  # Каждую минуту
-#     },
-# }
 
 TELEGRAM_URL = "https://api.telegram.org/bot"
 BOT_TOKEN = os.getenv("BOT_TOKEN")
