@@ -6,9 +6,6 @@ class User(AbstractUser):
     username = None
 
     email = models.EmailField(unique=True)
-    telegram_id = models.CharField(
-        max_length=255, null=True, blank=True, verbose_name="Telegram ID"
-    )
     chat_id = models.BigIntegerField(verbose_name="ID чата в Telegram")
 
     USERNAME_FIELD = "email"
