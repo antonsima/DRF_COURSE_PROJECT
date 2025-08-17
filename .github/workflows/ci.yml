@@ -52,7 +52,7 @@ jobs:
           pip install poetry
           poetry config virtualenvs.in-project true
           poetry config virtualenvs.create true
-          poetry install --no-interaction --no-ansi
+          poetry install --no-interaction --no-ansi --no-root
           
       - name: Run migrate
         run: python manage.py migrate
