@@ -43,7 +43,7 @@ jobs:
           path: |
             ~/.cache/pypoetry
             ~/.local/share/virtualenvs/
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock) }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
           restore-keys: ${{ runner.os }}-poetry-
 
       - name: Install dependencies
