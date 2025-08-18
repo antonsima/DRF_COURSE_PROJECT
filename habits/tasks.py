@@ -1,14 +1,13 @@
-import logging
-from collections import defaultdict
 
 from celery import shared_task
 from django.utils import timezone
+from collections import defaultdict
 
 from .models import Habit
 from .services import send_telegram_message
+import logging
 
 logger = logging.getLogger(__name__)
-
 
 @shared_task
 def send_daily_habit_reminders():
@@ -22,7 +21,7 @@ def send_daily_habit_reminders():
         # Получаем все привычки, которые нужно выполнить сегодня
         habits = Habit.objects.filter(
             periodicity__gte=weekday  # Проверяем периодичность
-        ).select_related("user")
+        ).select_related('user')
 
         # Группируем привычки по пользователям
         user_habits = defaultdict(list)
@@ -65,7 +64,8 @@ def send_habit_reminders():
 
         # Находим привычки, которые нужно выполнить сейчас
         habits = Habit.objects.filter(
-            time__hour=current_time.hour, time__minute=current_time.minute
+            time__hour=current_time.hour,
+            time__minute=current_time.minute
         )
 
         for habit in habits:
@@ -83,9 +83,7 @@ def send_habit_reminders():
 
                 try:
                     send_telegram_message(habit.user.chat_id, message)
-                    logger.info(
-                        f"Отправлено напоминание для {habit.user}: {habit.action}"
-                    )
+                    logger.info(f"Отправлено напоминание для {habit.user}: {habit.action}")
                 except Exception as e:
                     logger.error(f"Ошибка отправки сообщения: {str(e)}")
 
