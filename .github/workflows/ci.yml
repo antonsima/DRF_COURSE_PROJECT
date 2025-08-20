@@ -122,87 +122,6 @@ jobs:
           CELERY_BROKER_URL=redis://redis:6379
           CELERY_RESULT_BACKEND=redis://redis:6379
           EOF
-#
-#      - name: Create docker-compose.prod.yml
-#        run: |
-#          cat << EOF > docker-compose.prod.yml
-#          services:
-#            web:
-#              build:
-#                context: .
-#                dockerfile: Dockerfile
-#              env_file:
-#                - .env
-#              ports:
-#                - "80:8000"
-#              volumes:
-#                - .:/app
-#                - static_volume:/code/static
-#              depends_on:
-#                db:
-#                  condition: service_healthy
-#                redis:
-#                  condition: service_healthy
-#
-#            db:
-#              image: postgres
-#              env_file:
-#                - .env
-#              ports:
-#                - "5432:5432"
-#              volumes:
-#                - postgres_data:/var/lib/postgresql/data
-#              healthcheck:
-#                test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d ${POSTGRES_DB}']
-#                interval: 30s
-#                timeout: 10s
-#                retries: 5
-#
-#            redis:
-#              image: redis:alpine
-#              ports:
-#                - "6379:6379"
-#              healthcheck:
-#                test: [ 'CMD', 'redis-cli', 'ping' ]
-#                interval: 30s
-#                timeout: 10s
-#                retries: 5
-#
-#            celery:
-#              build:
-#                context: .
-#                dockerfile: Dockerfile
-#              command: celery -A config worker --loglevel=info
-#              env_file:
-#                - .env
-#              volumes:
-#                - .:/app
-#              depends_on:
-#                db:
-#                  condition: service_healthy
-#                redis:
-#                  condition: service_healthy
-#
-#            celery_beat:
-#              build:
-#                context: .
-#                dockerfile: Dockerfile
-#              command: celery -A config beat --loglevel=info
-#              env_file:
-#                - .env
-#              volumes:
-#                - .:/app
-#              depends_on:
-#                db:
-#                  condition: service_healthy
-#                redis:
-#                  condition: service_healthy
-#
-#          volumes:
-#            postgres_data:
-#            static_volume:
-#            redis_data:
-#          EOF
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
@@ -217,10 +136,4 @@ jobs:
             sudo docker stop myapp || true
             sudo docker rm myapp || true
             sudo docker run -d --name myapp -p 80:8000 --env-file .env ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#          cd ~
-#          sudo apt update
-#          sudo apt install docker-compose-plugin
-#          sudo docker compose -f docker-compose.prod.yml down
-#          sudo docker compose -f docker-compose.prod.yml pull
-#          sudo docker compose -f docker-compose.prod.yml up -d
           EOF
