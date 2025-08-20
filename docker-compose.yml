@@ -1,5 +1,7 @@
 services:
   web:
+    networks:
+      - mynetwork
     build:
       context: .
       dockerfile: Dockerfile
@@ -27,6 +29,8 @@ services:
         condition: service_healthy
 
   db:
+    networks:
+      - mynetwork
     image: postgres
 #    environment:
 #      - POSTGRES_USER=${POSTGRES_USER}
@@ -45,6 +49,8 @@ services:
       retries: 5
 
   redis:
+    networks:
+      - mynetwork
     image: redis:alpine
     ports:
       - "6379:6379"
@@ -55,6 +61,8 @@ services:
       retries: 5
 
   celery:
+    networks:
+      - mynetwork
     build:
       context: .
       dockerfile: Dockerfile
@@ -76,6 +84,8 @@ services:
         condition: service_healthy
 
   celery_beat:
+    networks:
+      - mynetwork
     build:
       context: .
       dockerfile: Dockerfile
@@ -99,3 +109,7 @@ volumes:
   postgres_data:
   static_volume:
   redis_data:
+
+networks:
+  mynetwork:
+    driver: bridge
