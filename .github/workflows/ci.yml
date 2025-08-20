@@ -211,16 +211,16 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          sudo apt update
-          sudo apt install docker-compose-plugin
           scp -o StrictHostKeyChecking=no .env docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
 #            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
 #            sudo docker stop myapp || true
 #            sudo docker rm myapp || true
 #            sudo docker run -d --name myapp -p 80:8000 --env-file .env ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-            cd ~
-            sudo docker compose -f docker-compose.prod.yml down
-            sudo docker compose -f docker-compose.prod.yml pull
-            sudo docker compose -f docker-compose.prod.yml up -d
+          cd ~
+          sudo apt update
+          sudo apt install docker-compose-plugin               
+          sudo docker compose -f docker-compose.prod.yml down
+          sudo docker compose -f docker-compose.prod.yml pull
+          sudo docker compose -f docker-compose.prod.yml up -d
           EOF
