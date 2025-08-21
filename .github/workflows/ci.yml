@@ -122,6 +122,7 @@ jobs:
           CELERY_BROKER_URL=redis://redis:6379
           CELERY_RESULT_BACKEND=redis://redis:6379
           IMAGE_TAG=${{ github.sha }}
+          DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
           EOF
 
 #      - name: Create docker-compose.yml file from secrets
