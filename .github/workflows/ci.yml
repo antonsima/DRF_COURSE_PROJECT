@@ -225,11 +225,13 @@ jobs:
           scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-            sudo docker stop $(docker ps -aq) 2>/dev/null || true
-            sudo docker rm $(docker ps -aq) 2>/dev/null || true
-            sudo fuser -k 5432/tcp 2>/dev/null || true
-            sudo fuser -k 6379/tcp 2>/dev/null || true
-            sleep 2
+#            sudo docker stop $(docker ps -aq) 2>/dev/null || true
+#            sudo docker rm $(docker ps -aq) 2>/dev/null || true
+#            sudo fuser -k 5432/tcp 2>/dev/null || true
+#            sudo fuser -k 6379/tcp 2>/dev/null || true
+#            sleep 2
+            sudo docker rm -f ***_web_1 ***_db_1 ***_redis_1 2>/dev/null || true
+            sudo docker rm -f $(docker ps -aq) 2>/dev/null || true
             docker-compose down --remove-orphans --rmi all --volumes --timeout 0
             docker-compose -f docker-compose.yml --env-file .env up -d --build
           EOF
