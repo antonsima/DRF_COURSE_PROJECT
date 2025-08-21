@@ -225,6 +225,6 @@ jobs:
           scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-            echo "IMAGE_TAG=${{ github.sha }}" | sudo tee -a .env
+            sudo docker-compose --env-file .env down --remove-orphans
             sudo docker-compose -f docker-compose.yml up -d --build
           EOF
