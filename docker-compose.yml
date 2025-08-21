@@ -1,6 +1,6 @@
 services:
   web:
-    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${IMAGE_TAG}
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
     networks:
       - mynetwork
 #    build:
@@ -10,8 +10,8 @@ services:
 #                - mynetwork
 #              command: >
 #              bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-#    command: >
-#      bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: >
+      bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 #    environment:
 #      - DATABASE_HOST=db
 #      - REDIS_HOST=redis
@@ -65,7 +65,7 @@ services:
       retries: 5
 
   celery:
-    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${IMAGE_TAG}
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
     networks:
       - mynetwork
 #    build:
@@ -89,7 +89,7 @@ services:
         condition: service_healthy
 
   celery_beat:
-    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${IMAGE_TAG}
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
     networks:
       - mynetwork
 #    build:
