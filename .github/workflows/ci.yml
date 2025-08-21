@@ -129,9 +129,9 @@ jobs:
           cat << EOF > docker-compose.yml
           services:
             web:
+              image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${IMAGE_TAG}
               networks:
                 - mynetwork
-              image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${IMAGE_TAG}
               command: >
               bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
               env_file:
