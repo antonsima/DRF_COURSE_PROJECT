@@ -224,11 +224,16 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ~/DRF_course_project
             git pull
-            sudo docker compose -f docker-compose.yml down -v --remove-orphans --rmi all
+            # Останавливаем и удаляем ВСЕ контейнеры проекта (включая работающие)
+            sudo docker compose -f docker-compose.yml down -v --remove-orphans 2>/dev/null || true
+            sudo docker rm -f $(sudo docker ps -aq) 2>/dev/null || true
+            sudo docker volume rm -f $(sudo docker volume ls -q) 2>/dev/null || true
+            sudo docker network rm $(sudo docker network ls -q -f name=*default*) 2>/dev/null || true
+            sudo docker network rm $(sudo docker network ls -q -f name=*test*) 2>/dev/null || true
+            sudo docker system prune -a -f --volumes
             sleep 3
-            CONTAINERS=$(sudo docker ps -aq -f name=.*test.*)
-            if [ ! -z "$CONTAINERS" ]; then
-              sudo docker rm -f $CONTAINERS
-            fi
             sudo docker compose -f docker-compose.yml --env-file .env up -d --build --force-recreate
+            sleep 10
+            sudo docker compose logs web
+            sudo docker compose logs celery
           EOF
