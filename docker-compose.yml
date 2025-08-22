@@ -13,8 +13,7 @@ services:
     ports:
       - "80:8000"
     volumes:
-      - .:/app
-      - static_volume:/code/static
+      - static_volume:/app/static
     depends_on:
       db:
         condition: service_healthy
@@ -73,7 +72,7 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/app
+      - static_volume:/app/static
     depends_on:
       db:
         condition: service_healthy
@@ -97,7 +96,7 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/app
+      - static_volume:/app/static
     depends_on:
       db:
         condition: service_healthy
