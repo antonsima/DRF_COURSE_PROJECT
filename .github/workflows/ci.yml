@@ -224,12 +224,11 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ~/DRF_course_project
             git pull
-            sudo docker compose -f docker-compose.yml rm -sf
-            sudo docker rm -f $(sudo docker ps -aq -f name=test-*) 2>/dev/null || true
-            sudo docker volume rm -f $(sudo docker volume ls -q -f name=test-*) 2>/dev/null || true
-            sudo docker system prune -a -f --volumes
-            sudo docker compose -f docker-compose.yml --env-file .env up -d --build
-            sleep 10
-            sudo docker compose logs web
-            sudo docker compose logs celery
+            sudo docker compose -f docker-compose.yml down -v --remove-orphans --rmi all
+            sleep 3
+            CONTAINERS=$(sudo docker ps -aq -f name=.*test.*)
+            if [ ! -z "$CONTAINERS" ]; then
+              sudo docker rm -f $CONTAINERS
+            fi
+            sudo docker compose -f docker-compose.yml --env-file .env up -d --build --force-recreate
           EOF
