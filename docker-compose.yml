@@ -107,7 +107,7 @@ services:
 volumes:
   postgres_data:
   static_volume:
-  redis_data:
+#  redis_data:
 
 #networks:
 #  mynetwork:
