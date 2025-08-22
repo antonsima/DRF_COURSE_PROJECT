@@ -20,6 +20,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    restart: unless-stopped
 
   db:
 #    networks:
@@ -36,10 +37,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d ${POSTGRES_DB}']
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
       interval: 30s
       timeout: 10s
       retries: 5
+    restart: unless-stopped
 
   redis:
 #    networks:
@@ -52,6 +54,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    restart: unless-stopped
 
   celery:
 #    image: ${DOCKER_HUB_USERNAME}/myapp:${IMAGE_TAG}
@@ -76,6 +79,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    restart: unless-stopped
 
   celery_beat:
 #    image: ${DOCKER_HUB_USERNAME}/myapp:${IMAGE_TAG}
@@ -99,6 +103,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   postgres_data:
