@@ -125,8 +125,8 @@ jobs:
             sudo docker system prune -a -f --volumes
             sudo systemctl restart docker
             sleep 5
-            sudo docker compose -f docker-compose.yml --env-file .env up -d db redis
+            sudo docker compose -f docker-compose.yml --env-file .env up -d --build --force-recreate
             sleep 10
             sudo docker ps -a
-            sudo docker compose -f docker-compose.yml --env-file .env up -d --build
+            sudo docker compose logs web
           EOF
