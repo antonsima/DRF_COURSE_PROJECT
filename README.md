@@ -200,3 +200,40 @@ Using the URLconf defined in config.urls, Django tried these URL patterns, in th
 You’re seeing this error because you have DEBUG = True in your Django settings file. Change that to False, and Django will display a standard 404 page.
 ~~~
 
+Команды для управления на сервере:
+
+~~~
+# Просмотр запущенных контейнеров
+docker ps
+
+# Просмотр логов
+docker logs <container_name>
+
+# Остановка и удаление контейнеров
+docker compose down
+
+# Перезапуск контейнеров
+docker compose restart
+
+# Просмотр системных логов
+journalctl -u docker --since "1 hour ago"
+~~~
+
+❌ Устранение неполадок
+
+Если деплой не удался:
+1. Проверьте логи GitHub Actions в соответствующем workflow
+2. Проверьте подключение к серверу:
+~~~
+ssh -v your-user@your-server-ip
+~~~
+3. Проверьте Docker на сервере:
+~~~
+ssh your-user@your-server-ip
+docker info
+docker ps -a
+~~~
+4. Проверьте наличие .env файла на сервере:
+~~~
+cat ~/DRF_course_project/.env
+~~~

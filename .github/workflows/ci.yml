@@ -120,19 +120,19 @@ jobs:
             cd ~/DRF_course_project
             git pull
             cat > .env << 'ENV_EOF'
-            SECRET_KEY=${{ secrets.SECRET_KEY }}
-            DEBUG=${{ secrets.DEBUG }}
-            POSTGRES_DB=test_db
-            POSTGRES_USER=postgres
-            POSTGRES_PASSWORD=postgres
-            DATABASE_HOST=db
-            REDIS_HOST=redis
-            CELERY_BROKER_URL=redis://redis:6379
-            CELERY_RESULT_BACKEND=redis://redis:6379
-            IMAGE_TAG=${{ github.sha }}
-            DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
-            BOT_TOKEN=${{ secrets.BOT_TOKEN }}
-            ENV_EOF
+          SECRET_KEY=${{ secrets.SECRET_KEY }}
+          DEBUG=${{ secrets.DEBUG }}
+          POSTGRES_DB=test_db
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=postgres
+          DATABASE_HOST=db
+          REDIS_HOST=redis
+          CELERY_BROKER_URL=redis://redis:6379
+          CELERY_RESULT_BACKEND=redis://redis:6379
+          IMAGE_TAG=${{ github.sha }}
+          DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
+          BOT_TOKEN=${{ secrets.BOT_TOKEN }}
+          ENV_EOF
             echo "✅ .env file created:"
             cat .env
             sudo docker rm -f $(sudo docker ps -aq) 2>/dev/null || true
