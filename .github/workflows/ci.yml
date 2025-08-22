@@ -224,11 +224,24 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ~/DRF_course_project
             git pull
-            sudo systemctl restart docker
-            sleep 3
-            sudo docker compose -f docker-compose.yml down -v --remove-orphans --rmi all 2>/dev/null || true
-            sudo docker rm -f $(sudo docker ps -aq) 2>/dev/null || true
-            sudo docker volume rm -f $(sudo docker volume ls -q) 2>/dev/null || true
-            sudo docker network rm $(sudo docker network ls -q) 2>/dev/null || true
-            sudo docker compose -f docker-compose.yml --env-file .env up -d --build
+              sudo docker rm -f $(sudo docker ps -aq) 2>/dev/null || true
+              sudo docker volume rm -f $(sudo docker volume ls -q) 2>/dev/null || true
+              sudo docker network rm $(sudo docker network ls -q) 2>/dev/null || true
+              sudo docker system prune -a -f --volumes
+              
+              sudo systemctl restart docker
+              sleep 5
+              
+              sudo docker compose -f docker-compose.yml --env-file .env up -d db redis
+              sleep 10
+              
+              sudo docker ps -a
+              
+              # Теперь запускаем остальные сервисы
+              sudo docker compose -f docker-compose.yml --env-file .env up -d --build
+              
+              # Проверяем логи
+              sleep 10
+              sudo docker compose logs web
+              sudo docker compose logs celery
           EOF
