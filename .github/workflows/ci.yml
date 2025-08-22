@@ -224,7 +224,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ~/DRF_course_project
             git pull
-            docker system prune -a --volumes -f
-            docker compose -f docker-compose.yml --env-file .env up -d --build
+            sudo docker system prune -a --volumes -f
+            sudo docker compose -f docker-compose.yml --env-file .env up -d --build
           EOF
 
