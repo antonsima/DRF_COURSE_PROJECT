@@ -231,21 +231,3 @@ jobs:
             sudo docker compose logs web
             sudo docker compose logs celery
           EOF
-- name: Deploy to Server
-  run: |
-    ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-      cd ~/DRF_course_project
-      git pull
-      
-      # Полная очистка старых контейнеров и томов
-      sudo docker compose -f docker-compose.yml down -v
-      sudo docker system prune -a -f
-      
-      # Пересобираем и запускаем
-      sudo docker compose -f docker-compose.yml --env-file .env up -d --build
-      
-      # Проверяем логи
-      sleep 10
-      sudo docker compose logs web
-      sudo docker compose logs celery
-    EOF
