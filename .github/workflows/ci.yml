@@ -228,7 +228,7 @@ jobs:
             sudo docker rm -f $(docker ps -aq) 2>/dev/null || true
             sudo docker network rm ***_mynetwork 2>/dev/null || true
             sleep 2
-            docker-compose down --remove-orphans --rmi all --volumes --timeout 0
-            docker-compose -f docker-compose.yml --env-file .env up -d --build
+            docker compose down --remove-orphans --rmi all --volumes --timeout 0
+            docker compose -f docker-compose.yml --env-file .env up -d --build
           EOF
 
