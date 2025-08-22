@@ -224,11 +224,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ~/DRF_course_project
             git pull
-            sudo docker rm -f ***_redis_1 ***_db_1 ***_web_1 2>/dev/null || true
-            sudo docker rm -f $(docker ps -aq) 2>/dev/null || true
-            sudo docker network rm ***_mynetwork 2>/dev/null || true
-            sleep 2
-            docker compose down --remove-orphans --rmi all --volumes --timeout 0
+            docker system prune -a --volumes -f
             docker compose -f docker-compose.yml --env-file .env up -d --build
           EOF
 
