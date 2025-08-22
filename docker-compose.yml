@@ -1,8 +1,8 @@
 services:
   web:
     image: ${DOCKER_HUB_USERNAME}/myapp:${IMAGE_TAG}
-    networks:
-      - mynetwork
+#    networks:
+#      - mynetwork
     build:
       context: .
 
