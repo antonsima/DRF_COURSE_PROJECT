@@ -221,8 +221,9 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          scp -o StrictHostKeyChecking=no . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ~/DRF_course_project
+            git pull
             sudo docker rm -f ***_redis_1 ***_db_1 ***_web_1 2>/dev/null || true
             sudo docker rm -f $(docker ps -aq) 2>/dev/null || true
             sudo docker network rm ***_mynetwork 2>/dev/null || true
