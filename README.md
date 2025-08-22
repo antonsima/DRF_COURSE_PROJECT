@@ -113,3 +113,90 @@ docker-compose down
 docker-compose logs
 ~~~
 
+## Настройка для виртуальной машины
+
+Подключитесь к виртуальной машине с помощью команды, отображаемой в вашей личном кабинете yandex cloud:
+
+~~~
+ssh -l your_VM_login your_VM_public_IP
+~~~
+
+Обновите систему и установите Docker:
+
+~~~
+sudo apt update && sudo apt upgrade -y
+sudo apt install docker.io docker-compose -y
+sudo systemctl enable docker
+sudo systemctl start docker
+~~~
+
+Добавьте пользователя в группу docker:
+
+~~~
+sudo usermod -aG docker $USER
+newgrp docker
+~~~
+
+Создайте директорию для проекта и перейдите в нее:
+~~~
+mkdir -p ~/DRF_course_project
+cd ~/DRF_course_project
+~~~
+
+**!!! НЕ ЗАКРЫВАЙТЕ ТЕРМИНАЛ, ОН ПОНАДОБИТСЯ ЧУТЬ ПОЗЖЕ !!!**
+
+Перейдите в вашем репозитории GitHub в Settings → Secrets and variables → Actions. Добавьте следующие secrets:
+
+| First Header  | Second Header                            |
+| ------------- |------------------------------------------|
+| SSH_KEY  | Приватный SSH ключ для доступа к серверу |
+| SSH_USER  | SSH пользователь (например: ubuntu)      |
+| SERVER_IP  | IP адрес вашего сервера                  |
+| SECRET_KEY  | Django SECRET_KEY                        |
+| DEBUG  | Django DEBUG (False для production)      |
+| DOCKER_HUB_ACCESS_TOKEN  | Docker Hub Access Token                  |
+| DOCKER_HUB_USERNAME  | Docker Hub username                      |
+| BOT_TOKEN  | Токен телеграм бота                      |
+
+Создайте репозиторий на Docker Hub
+Сгенерируйте Access Token:
+- Зайдите в Docker Hub → Account Settings → Security → New Access Token
+- Сохраните токен в GitHub Secrets как DOCKER_HUB_ACCESS_TOKEN
+
+Сделайте fork проекта в свой github и клонируйте проект на сервер в папку DRF_course_project и к себе локально на компьютер (сделайте это из терминала открытом на первых шагах, вы должны находиться в папке **DRF_course_project**:
+
+~~~
+git clone git@github.com:your-username/DRF_COURSE_PROJECT.git -b your_branch
+git pull
+~~~
+
+Закоммитьте изменения в вашу ветку:
+
+~~~
+git add .
+git commit -m "Deploy preparation"
+git push origin your_branch
+~~~
+
+GitHub Actions автоматически запустит workflow:
+- Сборка Docker образа
+- Запуск тестов
+- Пуш образа в Docker Hub
+- Деплой на сервер
+
+Проверьте работу приложения. Перейдите по публичному ip вашего сервера в браузере, вы должны увидеть:
+
+~~~
+Page not found (404)
+
+Using the URLconf defined in config.urls, Django tried these URL patterns, in this order:
+
+1. admin/
+2. habits/
+3. users/
+4. swagger/ [name='schema-swagger-ui']
+5. redoc/ [name='schema-redoc']
+
+You’re seeing this error because you have DEBUG = True in your Django settings file. Change that to False, and Django will display a standard 404 page.
+~~~
+
