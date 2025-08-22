@@ -231,3 +231,4 @@ jobs:
             docker-compose down --remove-orphans --rmi all --volumes --timeout 0
             docker-compose -f docker-compose.yml --env-file .env up -d --build
           EOF
+
