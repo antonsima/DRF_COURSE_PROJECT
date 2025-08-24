@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -103,11 +103,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("NAME"),
-        "USER": os.getenv("USER"),
-        "PASSWORD": os.getenv("PASSWORD"),
-        "HOST": os.getenv("HOST"),
-        "PORT": os.getenv("PORT"),
+        "NAME": os.getenv("POSTGRES_DB", "test_db"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+        "HOST": os.getenv("HOST", "db"),
+        "PORT": os.getenv("PORT", "5432"),
     }
 }
 
@@ -186,15 +186,20 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CELERY_BEAT_SCHEDULE = {
-    'send-daily-habits-reminder': {
-        'task': 'habits.tasks.send_daily_habit_reminders',
-        'schedule': crontab(hour=8, minute=0),  # Каждый день в 8:00 утра
+    "send-daily-habits-reminder": {
+        "task": "habits.tasks.send_daily_habit_reminders",
+        "schedule": crontab(hour=8, minute=0),  # Каждый день в 8:00 утра
     },
     "send_habit_reminders": {
         "task": "habits.tasks.send_habit_reminders",
-        "schedule": crontab(minute='*'),  # Каждую минуту
+        "schedule": crontab(minute="*"),  # Каждую минуту
     },
 }
 
 TELEGRAM_URL = "https://api.telegram.org/bot"
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+SECURE_HSTS_SECONDS = 0  # Отключено для разработки
+SECURE_SSL_REDIRECT = False  # Отключено без SSL
+SESSION_COOKIE_SECURE = False  # Для разработки
+CSRF_COOKIE_SECURE = False  # Для разработки

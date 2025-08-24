@@ -7,9 +7,16 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# RUN pip install celery && pip install poetry && poetry install --no-root
+RUN pip install --no-cache-dir poetry && \
+    poetry config virtualenvs.create false
+
 COPY pyproject.toml poetry.lock* ./
 
-RUN pip install celery && pip install poetry && poetry install --no-root
+# Устанавливаем зависимости
+RUN poetry install --no-interaction --no-ansi --no-root
+
+RUN python --version
 
 COPY . .
 
@@ -17,4 +24,12 @@ RUN mkdir -p /app/media
 
 EXPOSE 8000
 
-CMD ['python', 'manage.py', 'runserver', '0.0.0.0:8000']
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+#FROM nginx:latest
+
+#COPY nginx.conf /etc/nginx/nginx.conf
+
+#COPY html/ /usr/share/nginx/html/
+
+#EXPOSE 80
